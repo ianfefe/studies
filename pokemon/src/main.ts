@@ -1,4 +1,4 @@
-import { lista } from "./fetch";
+import { lista, tamTime} from "./fetch";
 import { getLista } from "./fetch";
 
 class Pokemon {
@@ -12,19 +12,16 @@ class Pokemon {
     image: string;
 }
 
-function showPokedex() {
-    for (let i = 1; i <= 10; i++) {
-            let nome = lista[i].name;
-            let tipos = `${lista[i].types[0].type.name} ${ lista[i].types[1] ? lista[i].types[1].type.name : ''}`
-            let imagem = lista[i].sprites.front_default;
-    
-            let pokemon = new Pokemon(nome, tipos, imagem)
-            let showPokemon = elementFromHTML(pokemon)
-            document.body.appendChild(showPokemon!)
-    }
+function showPokedex(player: number, i: number) {
+    let nome = lista[i].name;
+    let tipos = `${lista[i].types[0].type.name} ${ lista[i].types[1] ? lista[i].types[1].type.name : ''}`
+    let imagem = lista[i].sprites.front_default;
+    let pokemon = new Pokemon(nome, tipos, imagem)
+    let showPokemon = elementFromHTML(pokemon, i)
+    document.querySelector(`.table${player}`).appendChild(showPokemon!)
 }
 
-function elementFromHTML(pokemon: Pokemon){
+function elementFromHTML(pokemon: Pokemon, id:number, player: number){
     const template = document.createElement('template');
 
     template.innerHTML = `  <div class='poke-container'>
@@ -35,12 +32,26 @@ function elementFromHTML(pokemon: Pokemon){
                                         </div>
                             </div>`;
 
+
     return template.content.firstElementChild;
+}
+
+function constroiPlayer(player) {
+    if (player == 1) {
+        for (let i = 1; i <= tamTime; i++) {
+            showPokedex(player, i)
+        }
+    }else{
+        for (let i = tamTime + 1; i <= tamTime*2; i++) {
+            showPokedex(player, i)
+        }
+    }
 }
 
 async function pokedexInit(){
     await getLista();
-    showPokedex();
+    constroiPlayer(1)
+    constroiPlayer(2)
 }
 
 pokedexInit()

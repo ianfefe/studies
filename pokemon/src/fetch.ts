@@ -1,12 +1,22 @@
 const pokeURL = 'https://pokeapi.co/api/v2/pokemon/';
-const numero = 10;
+
+export const tamTime = 5;
+const cartas = tamTime*2;
 
 export const lista:any = [];
 
 export async function getLista() {
-    for (let i = 1; i <= numero; i++) {
-        let resp = await getPokemon(i)
-        lista[i] = resp
+    for (let i = 1; i <= cartas; i++) {
+        let random = Math.floor(Math.random() * 1302 + 1)
+
+        if (random <= 1025) {
+            let resp = await getPokemon(random)
+            lista[i] = resp
+        }else{
+            let resp = await getPokemon(random+8976)
+            lista[i] = resp
+        }
+
     }
 };
 

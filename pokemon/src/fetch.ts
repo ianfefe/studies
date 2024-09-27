@@ -1,7 +1,7 @@
 const pokeURL = 'https://pokeapi.co/api/v2/pokemon/';
 
-export const tamTime = 5;
-const cartas = tamTime*2;
+export const teamSize = 5;
+const cartas = teamSize*2;
 
 export const lista:any = [];
 

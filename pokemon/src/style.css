@@ -6,51 +6,64 @@ body {
 }
 
 .table {
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 0.1fr 1fr 1fr 0.1fr 1fr;
     margin: 5px;
+    overflow: visible;
 }
 
 .poke-container {
+    position: relative;
     display: grid;
-    border: 1px solid black;
-    justify-content: center;
     align-items: center;
-    width: 220px;
+    justify-content: center;
+    border: 1px solid black;
+    width: 15rem;
     height: 95%;
     border-radius: 8%;
-    padding: 5px;
-    margin: 10px;
+    margin: 5px;
+    overflow-wrap: break-word;
 }
 
 .cards1, .cards2, .void-cards {
-    box-sizing: border-box;
+    position: relative;
+    width: 100%;
     display: inline-flex;
-    margin: 20px;
+    justify-content: center;
 }
 
 .void-cards {
+    background-color: lightgray;
+    height: 100%;
 }
 
 .name, .type{
     text-align: center;
-    overflow-wrap: break-word;
     font-size: 1.2em;
     font-family: "Press Start 2P", system-ui;
     font-style: normal;
     font-display: border;
     color: white;
-    inline-size: 280px;
+    inline-size: 25rem;
     text-shadow:-1px  1px 0 #000,
                  1px  1px 0 #000,
                  1px -1px 0 #000,
                 -1px -1px 0 #000;
+    overflow-wrap: break-word;
+    width: 100%;
 }
 
-.imagem {
+.image {
    margin: 0 auto;
    width: 60%;
    height: 60%;
+}
+
+h1 {
+    text-align: center;
 }

@@ -1,8 +1,9 @@
-import { lista, tamTime} from "./fetch";
-import { getLista } from "./fetch";
+import { lista, teamSize, getLista } from "./fetch";
+
+let contadorP1 = 0, contadorP2 = 1;
 
 class Pokemon {
-    constructor(name: string, types: string, image: string){
+    constructor(name: string, types: string, image: string) {
         this.name = name;
         this.types = types;
         this.image = image;
@@ -12,25 +13,22 @@ class Pokemon {
     image: string;
 }
 
-function showPokedex(player: number, i: number, funcao: number) {
-    let nome = lista[i].name;
-    let tipos = `${lista[i].types[0].type.name} ${ lista[i].types[1] ? lista[i].types[1].type.name : ''}`
-    let imagem = lista[i].sprites.front_default;
-    let pokemon = new Pokemon(nome, tipos, imagem)
+function showPokedex(player: number, i: number) {
+    let n = lista[i].name;
+    let t = `${lista[i].types[0].type.name} ${lista[i].types[1] ? lista[i].types[1].type.name : ''}`;
+    let img = lista[i].sprites.front_default;
+    let pokemon = new Pokemon(n, t, img)
     let showPokemon = elementFromHTML(pokemon, i)
 
-    if (funcao == 1)
-        document.querySelector(`.cards${player}`).appendChild(showPokemon!)
-    else
-        document.querySelector(`.void-cards`).appendChild(showPokemon!)
+    document.querySelector(`.cards${player}`).appendChild(showPokemon!)
 }
 
-function elementFromHTML(pokemon: Pokemon, id:number){
+function elementFromHTML(pokemon: Pokemon, id: number) {
     const template = document.createElement('template');
 
     template.innerHTML = `  <div class='poke-container' id="${id}">
                                 <div class="name">${pokemon.name}</div>
-                                    <img src="${pokemon.image}" class="imagem" alt="${pokemon.name} image">
+                                    <img src="${pokemon.image}" class="image" alt="${pokemon.name} image">
                                     <div class="tipos">
                                         <div class="type">${pokemon.types}</div>
                                         </div>
@@ -40,41 +38,54 @@ function elementFromHTML(pokemon: Pokemon, id:number){
     return template.content.firstElementChild;
 }
 
-function clique(event){
-    let id = event.target.id
-    console.log(id)
-    const player = event.target.parentElement
-    if(player == 'cards1')
-        showPokedex(1, id, 2)
-    else
-        showPokedex(2, id, 2)
-}
+function fillVoid(event) {
+    let selected = event.target.closest('.poke-container')
+    let id = selected.id
+    let selectedPlayer = selected.parentElement
+    let voidCards = document.querySelector('.void-cards')
+    let p1 = document.querySelector('.cards1')
+    let p2 = document.querySelector('.cards2')
 
-function setClick() {
-    let cartas = document.querySelectorAll('.poke-container')
-    cartas.forEach(cartas => {
-        cartas.addEventListener("click", clique)
-    })
-}
 
-function constroiPlayer(player: number) {
-    if (player == 1) {
-        for (let i = 1; i <= tamTime; i++) {
-            showPokedex(player, i, 1)
-        }
-    }else{
-        for (let i = tamTime + 1; i <= tamTime*2; i++) {
-            showPokedex(player, i, 1)
+    if (voidCards.childElementCount < teamSize*2) {
+        if (selectedPlayer == p1) {
+            if (contadorP1 < contadorP2) {
+                voidCards.appendChild(document.getElementById(`${id}`))
+                contadorP1++
+            }
+        } else if (selectedPlayer == p2){
+            if (contadorP2 == contadorP1) {
+                voidCards.appendChild(document.getElementById(`${id}`))
+                contadorP2++
+            }
         }
     }
 }
 
-async function pokedexInit(){
+function setClick() {
+    let decks = document.querySelectorAll('.poke-container')
+    decks.forEach(card => {
+        card.addEventListener("click", fillVoid)
+    })
+}
+
+function buildPlayer(player: number) {
+    if (player == 1) {
+        for (let i = 1; i <= teamSize; i++) {
+            showPokedex(player, i)
+        }
+    } else {
+        for (let i = teamSize + 1; i <= teamSize * 2; i++) {
+            showPokedex(player, i)
+        }
+    }
+}
+
+async function pokedexInit() {
     await getLista();
-    constroiPlayer(1);
-    constroiPlayer(2);
-    setClick()    
+    buildPlayer(1);
+    buildPlayer(2);
+    setClick()
 }
 
 pokedexInit()
-
